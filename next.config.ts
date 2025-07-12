@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
         pathname: '/PokeAPI/sprites/**',
       },
     ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 };
 

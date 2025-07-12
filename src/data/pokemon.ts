@@ -1,89 +1,26 @@
 import { Pokemon } from "@/types/pokemon"
+import pokemonDataCleaned from "@/lib/pokemon_data_cleaned.json"
 
-export const pokemonData: Pokemon[] = [
-  {
-    id: 6,
-    name: "Charizard",
-    chineseName: "噴火龍",
-    types: ["火", "飛行"],
-    weaknesses: ["岩石", "水", "電"],
-    resistances: ["蟲", "鋼", "火", "草", "妖精", "格鬥"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
-    stats: { hp: 78, attack: 84, defense: 78, speed: 100 },
-  },
-  {
-    id: 25,
-    name: "Pikachu",
-    chineseName: "皮卡丘",
-    types: ["電"],
-    weaknesses: ["地面"],
-    resistances: ["飛行", "鋼", "電"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
-    stats: { hp: 35, attack: 55, defense: 40, speed: 90 },
-  },
-  {
-    id: 1,
-    name: "Bulbasaur",
-    chineseName: "妙蛙種子",
-    types: ["草", "毒"],
-    weaknesses: ["飛行", "冰", "火", "超能力"],
-    resistances: ["水", "電", "草", "格鬥", "妖精"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-    stats: { hp: 45, attack: 49, defense: 49, speed: 45 },
-  },
-  {
-    id: 7,
-    name: "Squirtle",
-    chineseName: "傑尼龜",
-    types: ["水"],
-    weaknesses: ["草", "電"],
-    resistances: ["鋼", "火", "水", "冰"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png",
-    stats: { hp: 44, attack: 48, defense: 65, speed: 43 },
-  },
-  {
-    id: 9,
-    name: "Blastoise",
-    chineseName: "水箭龜",
-    types: ["水"],
-    weaknesses: ["草", "電"],
-    resistances: ["鋼", "火", "水", "冰"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png",
-    stats: { hp: 79, attack: 83, defense: 100, speed: 78 },
-  },
-  {
-    id: 150,
-    name: "Mewtwo",
-    chineseName: "超夢",
-    types: ["超能力"],
-    weaknesses: ["蟲", "幽靈", "惡"],
-    resistances: ["格鬥", "超能力"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png",
-    stats: { hp: 106, attack: 110, defense: 90, speed: 130 },
-  },
-  {
-    id: 149,
-    name: "Dragonite",
-    chineseName: "快龍",
-    types: ["龍", "飛行"],
-    weaknesses: ["冰", "龍", "妖精", "岩石"],
-    resistances: ["火", "水", "草", "格鬥", "蟲", "地面"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/149.png",
-    stats: { hp: 91, attack: 134, defense: 95, speed: 80 },
-  },
-  {
-    id: 59,
-    name: "Arcanine",
-    chineseName: "風速狗",
-    types: ["火"],
-    weaknesses: ["水", "地面", "岩石"],
-    resistances: ["火", "草", "冰", "蟲", "鋼", "妖精"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/59.png",
-    stats: { hp: 90, attack: 110, defense: 80, speed: 95 },
-  },
-]
+// 使用整理後的資料
+export const pokemonData: Pokemon[] = pokemonDataCleaned.map(pokemon => ({
+  id: pokemon.id,
+  name: pokemon.name,
+  chineseName: pokemon.chineseName,
+  types: pokemon.types,
+  weaknesses: pokemon.weaknesses,
+  resistances: pokemon.resistances,
+  image: pokemon.image,
+  stats: {
+    hp: pokemon.stats.hp,
+    attack: pokemon.stats.attack,
+    defense: pokemon.stats.defense,
+    speed: pokemon.stats.speed,
+  }
+}))
 
+// 支援中英文屬性名稱的顏色配置
 export const typeColors: { [key: string]: string } = {
+  // 中文屬性
   火: "bg-red-500",
   水: "bg-blue-500",
   草: "bg-green-500",
@@ -101,4 +38,23 @@ export const typeColors: { [key: string]: string } = {
   幽靈: "bg-purple-700",
   惡: "bg-gray-800",
   龍: "bg-purple-600",
+  
+  // 英文屬性
+  Fire: "bg-red-500",
+  Water: "bg-blue-500",
+  Grass: "bg-green-500",
+  Electric: "bg-yellow-500",
+  Poison: "bg-purple-500",
+  Ground: "bg-amber-600",
+  Flying: "bg-indigo-400",
+  Bug: "bg-lime-500",
+  Rock: "bg-stone-600",
+  Steel: "bg-slate-500",
+  Ice: "bg-cyan-400",
+  Fighting: "bg-red-700",
+  Psychic: "bg-pink-500",
+  Fairy: "bg-pink-300",
+  Ghost: "bg-purple-700",
+  Dark: "bg-gray-800",
+  Dragon: "bg-purple-600",
 } 

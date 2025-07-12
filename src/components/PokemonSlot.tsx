@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { X, Search, User } from "lucide-react"
 import { PokemonSlotProps, Pokemon } from "@/types/pokemon"
 import { pokemonData, typeColors } from "@/data/pokemon"
+import { convertTypesToChinese, englishToChineseType } from "@/lib/pokemon-utils"
 
 export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: PokemonSlotProps) {
   const [searchTerm, setSearchTerm] = useState("")
@@ -16,12 +17,37 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
 
   useEffect(() => {
     if (searchTerm.length > 0) {
-      const filtered = pokemonData.filter(
-        (pokemon) =>
-          pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          pokemon.chineseName.includes(searchTerm) ||
-          pokemon.types.some((type) => type.includes(searchTerm)),
-      )
+      const filtered = pokemonData.filter((pokemon) => {
+        const searchLower = searchTerm.toLowerCase()
+        
+        // 搜尋英文名稱
+        const nameMatch = pokemon.name.toLowerCase().includes(searchLower)
+        
+        // 搜尋中文名稱
+        const chineseNameMatch = pokemon.chineseName.includes(searchTerm)
+        
+        // 搜尋英文屬性
+        const englishTypeMatch = pokemon.types.some((type) => 
+          type.toLowerCase().includes(searchLower)
+        )
+        
+        // 搜尋中文屬性
+        const chineseTypes = convertTypesToChinese(pokemon.types)
+        const chineseTypeMatch = chineseTypes.some((type) => 
+          type.includes(searchTerm)
+        )
+        
+        // 搜尋屬性中文名稱（支援部分匹配）
+        const chineseTypePartialMatch = Object.entries(englishToChineseType).some(([english, chinese]) => {
+          if (chinese.includes(searchTerm)) {
+            return pokemon.types.includes(english)
+          }
+          return false
+        })
+        
+        return nameMatch || chineseNameMatch || englishTypeMatch || chineseTypeMatch || chineseTypePartialMatch
+      })
+      
       setSuggestions(filtered.slice(0, 5))
       setShowSuggestions(true)
     } else {
@@ -40,6 +66,11 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
     onClear()
     setSearchTerm("")
     setShowSuggestions(false)
+  }
+
+  // 將英文屬性轉換為中文顯示
+  const getDisplayTypes = (types: string[]) => {
+    return convertTypesToChinese(types)
   }
 
   return (
@@ -69,13 +100,13 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
                     className="p-3 hover:bg-yellow-400/20 cursor-pointer border-b border-white/10 last:border-b-0 flex items-center gap-3"
                     onClick={() => handleSelect(pokemon)}
                   >
-                    <img src={pokemon.image} alt={pokemon.name} className="w-12 h-12" />
+                    <img src={pokemon.image || "/placeholder.svg"} alt={pokemon.name} className="w-12 h-12" />
                     <div>
                       <div className="text-white font-semibold">
                         {pokemon.chineseName} ({pokemon.name})
                       </div>
                       <div className="flex gap-1">
-                        {pokemon.types.map((type: string) => (
+                        {getDisplayTypes(pokemon.types).map((type: string) => (
                           <Badge key={type} className={`${typeColors[type]} text-white text-xs`}>
                             {type}
                           </Badge>
@@ -98,7 +129,7 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
           <div className="text-center">
             <div className="relative inline-block">
               <img
-                src={selectedPokemon.image}
+                src={selectedPokemon.image || "/placeholder.svg"}
                 alt={selectedPokemon.name}
                 className="w-24 h-24 mx-auto mb-3"
               />
@@ -112,13 +143,13 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
             <h4 className="text-lg font-bold text-white">{selectedPokemon.chineseName}</h4>
             <p className="text-white/70 mb-3">({selectedPokemon.name})</p>
 
-                         <div className="flex justify-center gap-1 mb-3">
-               {selectedPokemon.types.map((type: string) => (
-                 <Badge key={type} className={`${typeColors[type]} text-white`}>
-                   {type}
-                 </Badge>
-               ))}
-             </div>
+            <div className="flex justify-center gap-1 mb-3">
+              {getDisplayTypes(selectedPokemon.types).map((type: string) => (
+                <Badge key={type} className={`${typeColors[type]} text-white`}>
+                  {type}
+                </Badge>
+              ))}
+            </div>
 
             <div className="text-sm space-y-1">
               <div className="flex justify-between">

@@ -1,0 +1,466 @@
+[
+  {
+    "id": 1,
+    "name": "Bulbasaur",
+    "chineseName": "妙蛙種子",
+    "types": [
+      "Grass",
+      "Poison"
+    ],
+    "weaknesses": [
+      "Flying",
+      "Fire",
+      "Ice",
+      "Psychic"
+    ],
+    "resistances": [
+      "Water",
+      "Grass",
+      "Electric",
+      "Fighting",
+      "Fairy"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+    "stats": {
+      "hp": 45,
+      "attack": 49,
+      "defense": 49,
+      "specialAttack": 65,
+      "specialDefense": 65,
+      "speed": 45
+    }
+  },
+  {
+    "id": 2,
+    "name": "Ivysaur",
+    "chineseName": "妙蛙草",
+    "types": [
+      "Grass",
+      "Poison"
+    ],
+    "weaknesses": [
+      "Flying",
+      "Fire",
+      "Ice",
+      "Psychic"
+    ],
+    "resistances": [
+      "Water",
+      "Grass",
+      "Electric",
+      "Fighting",
+      "Fairy"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png",
+    "stats": {
+      "hp": 60,
+      "attack": 62,
+      "defense": 63,
+      "specialAttack": 80,
+      "specialDefense": 80,
+      "speed": 60
+    }
+  },
+  {
+    "id": 3,
+    "name": "Venusaur",
+    "chineseName": "妙蛙花",
+    "types": [
+      "Grass",
+      "Poison"
+    ],
+    "weaknesses": [
+      "Flying",
+      "Fire",
+      "Ice",
+      "Psychic"
+    ],
+    "resistances": [
+      "Water",
+      "Grass",
+      "Electric",
+      "Fighting",
+      "Fairy"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
+    "stats": {
+      "hp": 80,
+      "attack": 82,
+      "defense": 83,
+      "specialAttack": 100,
+      "specialDefense": 100,
+      "speed": 80
+    }
+  },
+  {
+    "id": 4,
+    "name": "Charmander",
+    "chineseName": "小火龍",
+    "types": [
+      "Fire"
+    ],
+    "weaknesses": [
+      "Ground",
+      "Rock",
+      "Water"
+    ],
+    "resistances": [
+      "Bug",
+      "Steel",
+      "Fire",
+      "Grass",
+      "Ice",
+      "Fairy"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png",
+    "stats": {
+      "hp": 39,
+      "attack": 52,
+      "defense": 43,
+      "specialAttack": 60,
+      "specialDefense": 50,
+      "speed": 65
+    }
+  },
+  {
+    "id": 5,
+    "name": "Charmeleon",
+    "chineseName": "火恐龍",
+    "types": [
+      "Fire"
+    ],
+    "weaknesses": [
+      "Ground",
+      "Rock",
+      "Water"
+    ],
+    "resistances": [
+      "Bug",
+      "Steel",
+      "Fire",
+      "Grass",
+      "Ice",
+      "Fairy"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png",
+    "stats": {
+      "hp": 58,
+      "attack": 64,
+      "defense": 58,
+      "specialAttack": 80,
+      "specialDefense": 65,
+      "speed": 80
+    }
+  },
+  {
+    "id": 6,
+    "name": "Charizard",
+    "chineseName": "噴火龍",
+    "types": [
+      "Fire",
+      "Flying"
+    ],
+    "weaknesses": [
+      "Rock",
+      "Water",
+      "Electric"
+    ],
+    "resistances": [
+      "Bug",
+      "Steel",
+      "Fire",
+      "Grass",
+      "Fairy",
+      "Fighting"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
+    "stats": {
+      "hp": 78,
+      "attack": 84,
+      "defense": 78,
+      "specialAttack": 109,
+      "specialDefense": 85,
+      "speed": 100
+    }
+  },
+  {
+    "id": 7,
+    "name": "Squirtle",
+    "chineseName": "傑尼龜",
+    "types": [
+      "Water"
+    ],
+    "weaknesses": [
+      "Grass",
+      "Electric"
+    ],
+    "resistances": [
+      "Steel",
+      "Fire",
+      "Water",
+      "Ice"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png",
+    "stats": {
+      "hp": 44,
+      "attack": 48,
+      "defense": 65,
+      "specialAttack": 50,
+      "specialDefense": 64,
+      "speed": 43
+    }
+  },
+  {
+    "id": 8,
+    "name": "Wartortle",
+    "chineseName": "卡咪龜",
+    "types": [
+      "Water"
+    ],
+    "weaknesses": [
+      "Grass",
+      "Electric"
+    ],
+    "resistances": [
+      "Steel",
+      "Fire",
+      "Water",
+      "Ice"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png",
+    "stats": {
+      "hp": 59,
+      "attack": 63,
+      "defense": 80,
+      "specialAttack": 65,
+      "specialDefense": 80,
+      "speed": 58
+    }
+  },
+  {
+    "id": 9,
+    "name": "Blastoise",
+    "chineseName": "水箭龜",
+    "types": [
+      "Water"
+    ],
+    "weaknesses": [
+      "Grass",
+      "Electric"
+    ],
+    "resistances": [
+      "Steel",
+      "Fire",
+      "Water",
+      "Ice"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png",
+    "stats": {
+      "hp": 79,
+      "attack": 83,
+      "defense": 100,
+      "specialAttack": 85,
+      "specialDefense": 105,
+      "speed": 78
+    }
+  },
+  {
+    "id": 10,
+    "name": "Caterpie",
+    "chineseName": "綠毛蟲",
+    "types": [
+      "Bug"
+    ],
+    "weaknesses": [
+      "Flying",
+      "Rock",
+      "Fire"
+    ],
+    "resistances": [
+      "Fighting",
+      "Ground",
+      "Grass"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10.png",
+    "stats": {
+      "hp": 45,
+      "attack": 30,
+      "defense": 35,
+      "specialAttack": 20,
+      "specialDefense": 20,
+      "speed": 45
+    }
+  },
+  {
+    "id": 11,
+    "name": "Metapod",
+    "chineseName": "鐵甲蛹",
+    "types": [
+      "Bug"
+    ],
+    "weaknesses": [
+      "Flying",
+      "Rock",
+      "Fire"
+    ],
+    "resistances": [
+      "Fighting",
+      "Ground",
+      "Grass"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/11.png",
+    "stats": {
+      "hp": 50,
+      "attack": 20,
+      "defense": 55,
+      "specialAttack": 25,
+      "specialDefense": 25,
+      "speed": 30
+    }
+  },
+  {
+    "id": 12,
+    "name": "Butterfree",
+    "chineseName": "巴大蝴",
+    "types": [
+      "Bug",
+      "Flying"
+    ],
+    "weaknesses": [
+      "Flying",
+      "Rock",
+      "Fire",
+      "Electric",
+      "Ice"
+    ],
+    "resistances": [
+      "Fighting",
+      "Ground",
+      "Grass",
+      "Bug"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/12.png",
+    "stats": {
+      "hp": 60,
+      "attack": 45,
+      "defense": 50,
+      "specialAttack": 90,
+      "specialDefense": 80,
+      "speed": 70
+    }
+  },
+  {
+    "id": 13,
+    "name": "Weedle",
+    "chineseName": "獨角蟲",
+    "types": [
+      "Bug",
+      "Poison"
+    ],
+    "weaknesses": [
+      "Flying",
+      "Rock",
+      "Fire",
+      "Psychic"
+    ],
+    "resistances": [
+      "Fighting",
+      "Grass",
+      "Poison",
+      "Bug",
+      "Fairy"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/13.png",
+    "stats": {
+      "hp": 40,
+      "attack": 35,
+      "defense": 30,
+      "specialAttack": 20,
+      "specialDefense": 20,
+      "speed": 50
+    }
+  },
+  {
+    "id": 25,
+    "name": "Pikachu",
+    "chineseName": "皮卡丘",
+    "types": [
+      "Electric"
+    ],
+    "weaknesses": [
+      "Ground"
+    ],
+    "resistances": [
+      "Flying",
+      "Steel",
+      "Electric"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+    "stats": {
+      "hp": 35,
+      "attack": 55,
+      "defense": 40,
+      "specialAttack": 50,
+      "specialDefense": 50,
+      "speed": 90
+    }
+  },
+  {
+    "id": 31,
+    "name": "Nidoqueen",
+    "chineseName": "尼多后",
+    "types": [
+      "Poison",
+      "Ground"
+    ],
+    "weaknesses": [
+      "Ground",
+      "Psychic",
+      "Water",
+      "Ice"
+    ],
+    "resistances": [
+      "Fighting",
+      "Poison",
+      "Bug",
+      "Fairy",
+      "Rock",
+      "Electric"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/31.png",
+    "stats": {
+      "hp": 90,
+      "attack": 92,
+      "defense": 87,
+      "specialAttack": 75,
+      "specialDefense": 85,
+      "speed": 76
+    }
+  },
+  {
+    "id": 150,
+    "name": "Mewtwo",
+    "chineseName": "超夢",
+    "types": [
+      "Psychic"
+    ],
+    "weaknesses": [
+      "Bug",
+      "Ghost",
+      "Dark"
+    ],
+    "resistances": [
+      "Fighting",
+      "Psychic"
+    ],
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png",
+    "stats": {
+      "hp": 106,
+      "attack": 110,
+      "defense": 90,
+      "specialAttack": 154,
+      "specialDefense": 90,
+      "speed": 130
+    }
+  }
+]

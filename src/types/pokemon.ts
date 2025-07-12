@@ -11,6 +11,8 @@ export interface Pokemon {
     attack: number
     defense: number
     speed: number
+    specialAttack?: number
+    specialDefense?: number
   }
 }
 

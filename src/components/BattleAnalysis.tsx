@@ -6,8 +6,14 @@ import { Badge } from "@/components/ui/badge"
 import { Shield } from "lucide-react"
 import { BattleAnalysisProps } from "@/types/pokemon"
 import { typeColors } from "@/data/pokemon"
+import { convertTypesToChinese } from "@/lib/pokemon-utils"
 
 export function BattleAnalysis({ team, onBackToTeam }: BattleAnalysisProps) {
+  // 將英文屬性轉換為中文顯示
+  const getDisplayTypes = (types: string[]) => {
+    return convertTypesToChinese(types)
+  }
+
   return (
     <div className="text-center">
       <Card className="bg-black/60 border-2 border-red-500 backdrop-blur-sm mb-8">
@@ -20,7 +26,7 @@ export function BattleAnalysis({ team, onBackToTeam }: BattleAnalysisProps) {
                   <div className="bg-gradient-to-br from-yellow-400/20 to-red-500/20 p-4 rounded-lg">
                     <h4 className="text-lg font-bold text-yellow-400 mb-2">位置 {index + 1}</h4>
                     <img
-                      src={pokemon.image}
+                      src={pokemon.image || "/placeholder.svg"}
                       alt={pokemon.name}
                       className="w-32 h-32 mx-auto mb-2"
                     />
@@ -28,7 +34,7 @@ export function BattleAnalysis({ team, onBackToTeam }: BattleAnalysisProps) {
                     <p className="text-white/70 mb-3">({pokemon.name})</p>
 
                     <div className="flex justify-center gap-1 mb-3">
-                      {pokemon.types.map((type: string) => (
+                      {getDisplayTypes(pokemon.types).map((type: string) => (
                         <Badge key={type} className={`${typeColors[type]} text-white text-xs`}>
                           {type}
                         </Badge>
