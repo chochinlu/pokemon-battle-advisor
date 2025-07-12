@@ -7,6 +7,7 @@ import { Shield } from "lucide-react"
 import { BattleAnalysisProps } from "@/types/pokemon"
 import { typeColors } from "@/data/pokemon"
 import { convertTypesToChinese } from "@/lib/pokemon-utils"
+import { PokemonCard } from "./PokemonCard"
 
 export function BattleAnalysis({ team, onBackToTeam }: BattleAnalysisProps) {
   // 將英文屬性轉換為中文顯示
@@ -20,49 +21,13 @@ export function BattleAnalysis({ team, onBackToTeam }: BattleAnalysisProps) {
         <CardContent className="p-8">
           <h2 className="text-4xl font-bold text-red-400 mb-6">⚔️ 對戰分析 ⚔️</h2>
           <div className="grid grid-cols-3 gap-6 mb-6">
-            {team.map(
-              (pokemon, index) => (
-                <div key={pokemon.id} className="text-center">
-                  <div className="bg-gradient-to-br from-yellow-400/20 to-red-500/20 p-4 rounded-lg">
-                    <h4 className="text-lg font-bold text-yellow-400 mb-2">位置 {index + 1}</h4>
-                    <img
-                      src={pokemon.image || "/placeholder.svg"}
-                      alt={pokemon.name}
-                      className="w-32 h-32 mx-auto mb-2"
-                    />
-                    <h3 className="text-xl font-bold text-white">{pokemon.chineseName}</h3>
-                    <p className="text-white/70 mb-3">({pokemon.name})</p>
-
-                    <div className="flex justify-center gap-1 mb-3">
-                      {getDisplayTypes(pokemon.types).map((type: string) => (
-                        <Badge key={type} className={`${typeColors[type]} text-white text-xs`}>
-                          {type}
-                        </Badge>
-                      ))}
-                    </div>
-
-                    <div className="space-y-1 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-red-400">HP:</span>
-                        <span className="text-white">{pokemon.stats.hp}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-orange-400">攻擊:</span>
-                        <span className="text-white">{pokemon.stats.attack}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-blue-400">防禦:</span>
-                        <span className="text-white">{pokemon.stats.defense}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-green-400">速度:</span>
-                        <span className="text-white">{pokemon.stats.speed}</span>
-                      </div>
-                    </div>
-                  </div>
+            {team.map((pokemon, index) => (
+              <div key={pokemon.id} className="text-center">
+                <div className="bg-gradient-to-br from-yellow-400/20 to-red-500/20 p-4 rounded-lg">
+                  <PokemonCard pokemon={pokemon} slotIndex={index} />
                 </div>
-              ),
-            )}
+              </div>
+            ))}
           </div>
 
           <div className="bg-gradient-to-r from-yellow-400/20 to-red-500/20 p-6 rounded-lg mb-6">
