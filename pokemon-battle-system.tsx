@@ -31,8 +31,28 @@ const pokemonData: Pokemon[] = [
     types: ["火", "飛行"],
     weaknesses: ["岩石", "水", "電"],
     resistances: ["蟲", "鋼", "火", "草", "妖精", "格鬥"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
+    image: "/placeholder.svg?height=120&width=120",
     stats: { hp: 78, attack: 84, defense: 78, speed: 100 },
+  },
+  {
+    id: 13,
+    name: "Weedle",
+    chineseName: "獨角蟲",
+    types: ["蟲", "毒"],
+    weaknesses: ["飛行", "岩石", "火", "超能力"],
+    resistances: ["格鬥", "草", "毒", "蟲", "妖精"],
+    image: "/placeholder.svg?height=120&width=120",
+    stats: { hp: 40, attack: 35, defense: 30, speed: 50 },
+  },
+  {
+    id: 31,
+    name: "Nidoqueen",
+    chineseName: "尼多后",
+    types: ["毒", "地面"],
+    weaknesses: ["地面", "超能力", "水", "冰"],
+    resistances: ["格鬥", "毒", "蟲", "妖精", "岩石", "電"],
+    image: "/placeholder.svg?height=120&width=120",
+    stats: { hp: 90, attack: 92, defense: 87, speed: 76 },
   },
   {
     id: 25,
@@ -41,7 +61,7 @@ const pokemonData: Pokemon[] = [
     types: ["電"],
     weaknesses: ["地面"],
     resistances: ["飛行", "鋼", "電"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+    image: "/placeholder.svg?height=120&width=120",
     stats: { hp: 35, attack: 55, defense: 40, speed: 90 },
   },
   {
@@ -51,7 +71,7 @@ const pokemonData: Pokemon[] = [
     types: ["草", "毒"],
     weaknesses: ["飛行", "冰", "火", "超能力"],
     resistances: ["水", "電", "草", "格鬥", "妖精"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+    image: "/placeholder.svg?height=120&width=120",
     stats: { hp: 45, attack: 49, defense: 49, speed: 45 },
   },
   {
@@ -61,7 +81,7 @@ const pokemonData: Pokemon[] = [
     types: ["水"],
     weaknesses: ["草", "電"],
     resistances: ["鋼", "火", "水", "冰"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png",
+    image: "/placeholder.svg?height=120&width=120",
     stats: { hp: 44, attack: 48, defense: 65, speed: 43 },
   },
   {
@@ -71,7 +91,7 @@ const pokemonData: Pokemon[] = [
     types: ["水"],
     weaknesses: ["草", "電"],
     resistances: ["鋼", "火", "水", "冰"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png",
+    image: "/placeholder.svg?height=120&width=120",
     stats: { hp: 79, attack: 83, defense: 100, speed: 78 },
   },
   {
@@ -81,28 +101,8 @@ const pokemonData: Pokemon[] = [
     types: ["超能力"],
     weaknesses: ["蟲", "幽靈", "惡"],
     resistances: ["格鬥", "超能力"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png",
+    image: "/placeholder.svg?height=120&width=120",
     stats: { hp: 106, attack: 110, defense: 90, speed: 130 },
-  },
-  {
-    id: 149,
-    name: "Dragonite",
-    chineseName: "快龍",
-    types: ["龍", "飛行"],
-    weaknesses: ["冰", "龍", "妖精", "岩石"],
-    resistances: ["火", "水", "草", "格鬥", "蟲", "地面"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/149.png",
-    stats: { hp: 91, attack: 134, defense: 95, speed: 80 },
-  },
-  {
-    id: 59,
-    name: "Arcanine",
-    chineseName: "風速狗",
-    types: ["火"],
-    weaknesses: ["水", "地面", "岩石"],
-    resistances: ["火", "草", "冰", "蟲", "鋼", "妖精"],
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/59.png",
-    stats: { hp: 90, attack: 110, defense: 80, speed: 95 },
   },
 ]
 
@@ -123,7 +123,6 @@ const typeColors: { [key: string]: string } = {
   妖精: "bg-pink-300",
   幽靈: "bg-purple-700",
   惡: "bg-gray-800",
-  龍: "bg-purple-600",
 }
 
 interface PokemonSlotProps {
@@ -194,7 +193,7 @@ function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: PokemonS
                     className="p-3 hover:bg-yellow-400/20 cursor-pointer border-b border-white/10 last:border-b-0 flex items-center gap-3"
                     onClick={() => handleSelect(pokemon)}
                   >
-                    <img src={pokemon.image} alt={pokemon.name} className="w-12 h-12" />
+                    <img src={pokemon.image || "/placeholder.svg"} alt={pokemon.name} className="w-12 h-12" />
                     <div>
                       <div className="text-white font-semibold">
                         {pokemon.chineseName} ({pokemon.name})
@@ -223,7 +222,7 @@ function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: PokemonS
           <div className="text-center">
             <div className="relative inline-block">
               <img
-                src={selectedPokemon.image}
+                src={selectedPokemon.image || "/placeholder.svg"}
                 alt={selectedPokemon.name}
                 className="w-24 h-24 mx-auto mb-3"
               />
@@ -270,7 +269,7 @@ function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: PokemonS
   )
 }
 
-export default function Home() {
+export default function PokemonBattleSystem() {
   const [team, setTeam] = useState<(Pokemon | null)[]>([null, null, null])
   const [battleMode, setBattleMode] = useState(false)
 
@@ -301,7 +300,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
-        <h1 className="text-3xl font-bold underline text-red-500">Hello world!</h1>
       {/* Animated Background Effects */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-10 left-10 w-32 h-32 bg-yellow-400 rounded-full blur-xl animate-pulse"></div>
@@ -375,7 +373,7 @@ export default function Home() {
                           <div className="bg-gradient-to-br from-yellow-400/20 to-red-500/20 p-4 rounded-lg">
                             <h4 className="text-lg font-bold text-yellow-400 mb-2">位置 {index + 1}</h4>
                             <img
-                              src={pokemon.image}
+                              src={pokemon.image || "/placeholder.svg"}
                               alt={pokemon.name}
                               className="w-32 h-32 mx-auto mb-2"
                             />
