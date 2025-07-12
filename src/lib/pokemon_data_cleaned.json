@@ -16572,7 +16572,7 @@
     "nationalId": 134,
     "japaneseName": "シャワーズ",
     "name": "Vaporeon",
-    "chineseName": "水精靈",
+    "chineseName": "水伊布",
     "types": [
       "Water"
     ],
@@ -16701,7 +16701,7 @@
     "nationalId": 135,
     "japaneseName": "サンダース",
     "name": "Jolteon",
-    "chineseName": "雷精靈",
+    "chineseName": "雷伊布",
     "types": [
       "Electric"
     ],
@@ -16827,7 +16827,7 @@
     "nationalId": 136,
     "japaneseName": "ブースター",
     "name": "Flareon",
-    "chineseName": "火精靈",
+    "chineseName": "火伊布",
     "types": [
       "Fire"
     ],
