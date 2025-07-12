@@ -94,45 +94,45 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
         </div>
 
         {!selectedPokemon ? (
-          <div className="relative flex flex-col justify-center h-[370px]">
-            <Input
-              ref={inputRef}
-              type="text"
-              placeholder="搜尋寶可夢..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="text-xl p-4 bg-white/10 border-2 border-white/20 text-white placeholder-white/60 focus:border-yellow-400"
-            />
-
-            {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute top-full left-0 right-0 bg-black/90 border-2 border-yellow-400/50 rounded-lg mt-2 z-20 backdrop-blur-sm">
-                {suggestions.map((pokemon) => (
-                  <div
-                    key={pokemon.id}
-                    className="p-3 hover:bg-yellow-400/20 cursor-pointer border-b border-white/10 last:border-b-0 flex items-center gap-3"
-                    onClick={() => handleSelect(pokemon)}
-                  >
-                    <img src={pokemon.image || "/placeholder.svg"} alt={pokemon.name} className="w-12 h-12" />
-                    <div>
-                      <div className="text-xl text-white font-bold">
-                        {pokemon.chineseName} ({pokemon.name})
-                      </div>
-                      <div className="text-base text-white/70">
-                        {pokemon.japaneseName}
-                      </div>
-                      <div className="flex gap-1 mt-1">
-                        {getDisplayTypes(pokemon.types).map((type: string) => (
-                          <Badge key={type} className={`${typeColors[type]} text-white text-xs`}>
-                            {type}
-                          </Badge>
-                        ))}
+          <div className="flex flex-col justify-center h-[370px]">
+            <div className="relative w-full">
+              <Input
+                ref={inputRef}
+                type="text"
+                placeholder="搜尋寶可夢..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="text-xl p-4 bg-white/10 border-2 border-white/20 text-white placeholder-white/60 focus:border-yellow-400"
+              />
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute top-full left-0 right-0 bg-black/90 border-2 border-yellow-400/50 rounded-lg mt-1 z-20 backdrop-blur-sm shadow-xl max-h-72 overflow-y-auto">
+                  {suggestions.map((pokemon) => (
+                    <div
+                      key={pokemon.id}
+                      className="p-3 hover:bg-yellow-400/20 cursor-pointer border-b border-white/10 last:border-b-0 flex items-center gap-3"
+                      onClick={() => handleSelect(pokemon)}
+                    >
+                      <img src={pokemon.image || "/placeholder.svg"} alt={pokemon.name} className="w-12 h-12" />
+                      <div>
+                        <div className="text-xl text-white font-bold">
+                          {pokemon.chineseName} ({pokemon.name})
+                        </div>
+                        <div className="text-base text-white/70">
+                          {pokemon.japaneseName}
+                        </div>
+                        <div className="flex gap-1 mt-1">
+                          {getDisplayTypes(pokemon.types).map((type: string) => (
+                            <Badge key={type} className={`${typeColors[type]} text-white text-xs`}>
+                              {type}
+                            </Badge>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
+                  ))}
+                </div>
+              )}
+            </div>
             <div className="mt-4 h-32 border-2 border-dashed border-white/30 rounded-lg flex items-center justify-center">
               <div className="text-center text-white/50">
                 <Search className="w-10 h-10 mx-auto mb-2" />
