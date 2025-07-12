@@ -77,22 +77,31 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
   }
 
   return (
-    <Card className="bg-black/40 border-2 border-yellow-400/50 backdrop-blur-sm">
-      <CardContent className="p-6">
+    <Card className="bg-black/40 border-2 border-yellow-400/50 backdrop-blur-sm h-[480px] flex flex-col justify-between relative">
+      {/* 卡片右上角 X 按鈕 */}
+      {selectedPokemon && (
+        <button
+          onClick={handleClear}
+          className="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 z-20 shadow-lg"
+        >
+          <X className="w-7 h-7" />
+        </button>
+      )}
+      <CardContent className="p-6 h-full flex flex-col justify-between">
         <div className="flex items-center gap-2 mb-4">
           <User className="w-5 h-5 text-yellow-400" />
-          <h3 className="text-xl font-bold text-white">位置 {slotIndex + 1}</h3>
+          <h3 className="text-2xl font-extrabold text-white">位置 {slotIndex + 1}</h3>
         </div>
 
         {!selectedPokemon ? (
-          <div className="relative">
+          <div className="relative flex flex-col justify-center h-[370px]">
             <Input
               ref={inputRef}
               type="text"
               placeholder="搜尋寶可夢..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="text-lg p-4 bg-white/10 border-2 border-white/20 text-white placeholder-white/60 focus:border-yellow-400"
+              className="text-xl p-4 bg-white/10 border-2 border-white/20 text-white placeholder-white/60 focus:border-yellow-400"
             />
 
             {showSuggestions && suggestions.length > 0 && (
@@ -105,13 +114,13 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
                   >
                     <img src={pokemon.image || "/placeholder.svg"} alt={pokemon.name} className="w-12 h-12" />
                     <div>
-                      <div className="text-white font-semibold">
+                      <div className="text-xl text-white font-bold">
                         {pokemon.chineseName} ({pokemon.name})
                       </div>
-                      <div className="text-white/70 text-sm">
+                      <div className="text-base text-white/70">
                         {pokemon.japaneseName}
                       </div>
-                      <div className="flex gap-1">
+                      <div className="flex gap-1 mt-1">
                         {getDisplayTypes(pokemon.types).map((type: string) => (
                           <Badge key={type} className={`${typeColors[type]} text-white text-xs`}>
                             {type}
@@ -126,53 +135,53 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
 
             <div className="mt-4 h-32 border-2 border-dashed border-white/30 rounded-lg flex items-center justify-center">
               <div className="text-center text-white/50">
-                <Search className="w-8 h-8 mx-auto mb-2" />
-                <p>選擇一隻寶可夢</p>
+                <Search className="w-10 h-10 mx-auto mb-2" />
+                <p className="text-lg">選擇一隻寶可夢</p>
               </div>
             </div>
           </div>
         ) : (
-          <div className="text-center">
-            <div className="relative inline-block">
-              <img
-                src={selectedPokemon.image || "/placeholder.svg"}
-                alt={selectedPokemon.name}
-                className="w-24 h-24 mx-auto mb-3"
-              />
-              <button
-                onClick={handleClear}
-                className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1"
-              >
-                <X className="w-4 h-4" />
-              </button>
+          <div className="flex flex-row h-[370px] w-full items-center justify-center">
+            {/* 左欄：圖片、名稱、屬性 */}
+            <div className="flex flex-col items-center justify-center flex-1 min-w-0">
+              <div className="flex flex-col items-center mb-2">
+                <img
+                  src={selectedPokemon.image || "/placeholder.svg"}
+                  alt={selectedPokemon.name}
+                  className="w-40 h-40 mx-auto mb-2 object-contain drop-shadow-xl"
+                  style={{ maxWidth: '100%', maxHeight: '180px' }}
+                />
+              </div>
+              <div className="mb-1 w-full text-center">
+                <div className="text-2xl font-extrabold text-white leading-tight truncate">{selectedPokemon.chineseName}</div>
+                <div className="text-xl text-white/80 font-bold truncate">{selectedPokemon.name}</div>
+                <div className="text-lg text-white/60 font-semibold truncate">{selectedPokemon.japaneseName}</div>
+              </div>
+              <div className="flex justify-center gap-2 mb-1 flex-wrap">
+                {getDisplayTypes(selectedPokemon.types).map((type: string) => (
+                  <Badge key={type} className={`${typeColors[type]} text-white text-xl px-4 py-1`}>{type}</Badge>
+                ))}
+              </div>
             </div>
-            <h4 className="text-lg font-bold text-white">{selectedPokemon.chineseName}</h4>
-            <p className="text-white/70 mb-3">({selectedPokemon.name})</p>
-
-            <div className="flex justify-center gap-1 mb-3">
-              {getDisplayTypes(selectedPokemon.types).map((type: string) => (
-                <Badge key={type} className={`${typeColors[type]} text-white`}>
-                  {type}
-                </Badge>
-              ))}
-            </div>
-
-            <div className="text-sm space-y-1">
-              <div className="flex justify-between">
-                <span className="text-red-400">HP:</span>
-                <span className="text-white">{selectedPokemon.stats.hp}</span>
+            {/* 右欄：弱點與抗性 */}
+            <div className="flex flex-col items-start justify-center flex-1 min-w-0 pl-4">
+              {/* 弱點區塊 */}
+              <div className="mb-6 w-full">
+                <div className="text-xl text-red-400 font-extrabold mb-2">弱點</div>
+                <div className="flex flex-wrap gap-2">
+                  {getDisplayTypes(selectedPokemon.weaknesses).map((type: string) => (
+                    <Badge key={type} className={`${typeColors[type] || 'bg-red-500'} text-white text-xl px-3 py-1`}>{type}</Badge>
+                  ))}
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-orange-400">攻擊:</span>
-                <span className="text-white">{selectedPokemon.stats.attack}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-blue-400">防禦:</span>
-                <span className="text-white">{selectedPokemon.stats.defense}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-green-400">速度:</span>
-                <span className="text-white">{selectedPokemon.stats.speed}</span>
+              {/* 抗性區塊 */}
+              <div className="w-full">
+                <div className="text-xl text-blue-400 font-extrabold mb-2">抗性</div>
+                <div className="flex flex-wrap gap-2">
+                  {getDisplayTypes(selectedPokemon.resistances).map((type: string) => (
+                    <Badge key={type} className={`${typeColors[type] || 'bg-blue-500'} text-white text-xl px-3 py-1`}>{type}</Badge>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
