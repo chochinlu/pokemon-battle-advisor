@@ -1,9 +1,11 @@
 import { Pokemon } from "@/types/pokemon"
 import pokemonDataCleaned from "@/lib/pokemon_data_cleaned.json"
 
-// 使用整理後的資料
+// 使用完整的清理資料
 export const pokemonData: Pokemon[] = pokemonDataCleaned.map(pokemon => ({
   id: pokemon.id,
+  nationalId: pokemon.nationalId,
+  japaneseName: pokemon.japaneseName,
   name: pokemon.name,
   chineseName: pokemon.chineseName,
   types: pokemon.types,
@@ -15,7 +17,10 @@ export const pokemonData: Pokemon[] = pokemonDataCleaned.map(pokemon => ({
     attack: pokemon.stats.attack,
     defense: pokemon.stats.defense,
     speed: pokemon.stats.speed,
-  }
+    specialAttack: pokemon.stats.specialAttack,
+    specialDefense: pokemon.stats.specialDefense,
+  },
+  moves: pokemon.moves
 }))
 
 // 支援中英文屬性名稱的顏色配置

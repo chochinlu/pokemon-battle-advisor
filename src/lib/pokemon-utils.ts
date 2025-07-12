@@ -59,4 +59,54 @@ export function formatImageUrl(id: number): string {
 export function validateImageUrl(url: string): string {
   // 如果連結包含轉義字符，修正它
   return url.replace(/\\/g, '')
+}
+
+// 將原始 pokemon_data.json 轉換為清理格式
+export function convertPokemonData(rawData: any[]): any[] {
+  return rawData.map(pokemon => {
+    // 處理屬性字串，轉換為英文陣列
+    const typesString = pokemon["屬性"] || ""
+    const types = typesString.split(", ").map((type: string) => {
+      const trimmedType = type.trim()
+      return typeMapping[trimmedType] || trimmedType
+    })
+
+    // 處理弱點字串，轉換為英文陣列
+    const weaknessesString = pokemon["弱點"] || ""
+    const weaknesses = weaknessesString.split(", ").map((weakness: string) => {
+      const trimmedWeakness = weakness.trim()
+      return typeMapping[trimmedWeakness] || trimmedWeakness
+    })
+
+    // 處理抗性字串，轉換為英文陣列
+    const resistancesString = pokemon["抗性"] || ""
+    const resistances = resistancesString.split(", ").map((resistance: string) => {
+      const trimmedResistance = resistance.trim()
+      return typeMapping[trimmedResistance] || trimmedResistance
+    })
+
+    // 處理圖片連結
+    const imageUrl = validateImageUrl(pokemon["圖片連結"] || "")
+
+    return {
+      id: pokemon["全國編號"],
+      nationalId: pokemon["全國編號"],
+      japaneseName: pokemon["日文"],
+      name: pokemon["英文"],
+      chineseName: pokemon["中文譯名"],
+      types: types,
+      weaknesses: weaknesses,
+      resistances: resistances,
+      image: imageUrl,
+      stats: {
+        hp: pokemon["HP"],
+        attack: pokemon["攻擊"],
+        defense: pokemon["防禦"],
+        specialAttack: pokemon["特殊攻擊"],
+        specialDefense: pokemon["特殊防禦"],
+        speed: pokemon["速度"]
+      },
+      moves: pokemon["可學習招式"] ? pokemon["可學習招式"].split(", ") : []
+    }
+  })
 } 

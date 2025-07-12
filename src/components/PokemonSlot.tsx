@@ -26,6 +26,9 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
         // 搜尋中文名稱
         const chineseNameMatch = pokemon.chineseName.includes(searchTerm)
         
+        // 搜尋日文名稱
+        const japaneseNameMatch = pokemon.japaneseName.includes(searchTerm)
+        
         // 搜尋英文屬性
         const englishTypeMatch = pokemon.types.some((type) => 
           type.toLowerCase().includes(searchLower)
@@ -45,7 +48,7 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
           return false
         })
         
-        return nameMatch || chineseNameMatch || englishTypeMatch || chineseTypeMatch || chineseTypePartialMatch
+        return nameMatch || chineseNameMatch || japaneseNameMatch || englishTypeMatch || chineseTypeMatch || chineseTypePartialMatch
       })
       
       setSuggestions(filtered.slice(0, 5))
@@ -104,6 +107,9 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
                     <div>
                       <div className="text-white font-semibold">
                         {pokemon.chineseName} ({pokemon.name})
+                      </div>
+                      <div className="text-white/70 text-sm">
+                        {pokemon.japaneseName}
                       </div>
                       <div className="flex gap-1">
                         {getDisplayTypes(pokemon.types).map((type: string) => (

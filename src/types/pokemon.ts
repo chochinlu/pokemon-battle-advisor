@@ -1,5 +1,7 @@
 export interface Pokemon {
   id: number
+  nationalId: number
+  japaneseName: string
   name: string
   chineseName: string
   types: string[]
@@ -14,6 +16,7 @@ export interface Pokemon {
     specialAttack?: number
     specialDefense?: number
   }
+  moves?: string[]
 }
 
 export interface PokemonSlotProps {
@@ -23,15 +26,15 @@ export interface PokemonSlotProps {
   onClear: () => void
 }
 
-export interface BattleAnalysisProps {
-  team: Pokemon[]
-  onBackToTeam: () => void
-}
-
 export interface TeamSelectionProps {
   team: (Pokemon | null)[]
   onPokemonSelect: (slotIndex: number, pokemon: Pokemon) => void
   onPokemonClear: (slotIndex: number) => void
   onStartBattle: () => void
   onResetTeam: () => void
+}
+
+export interface BattleAnalysisProps {
+  team: Pokemon[]
+  onBackToTeam: () => void
 } 
