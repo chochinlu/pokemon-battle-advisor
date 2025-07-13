@@ -12,18 +12,32 @@ interface PokemonCardProps {
 export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon, slotIndex }) => {
   const getDisplayTypes = (types: string[]) => convertTypesToChinese(types)
   
-  const StatBar = ({ label, value, maxValue = 255, color }: { label: string; value: number; maxValue?: number; color: string }) => (
-    <div className="flex items-center gap-2 mb-0.5">
-      <div className={`text-xs font-bold ${color} min-w-[35px] text-right`}>{label}</div>
-      <div className="flex-1 bg-gray-700 rounded-full h-1.5">
-        <div 
-          className={`h-1.5 rounded-full transition-all duration-300 ${color.replace('text-', 'bg-')}`}
-          style={{ width: `${Math.min((value / maxValue) * 100, 100)}%` }}
-        />
+  const StatBar = ({ label, value, maxValue = 150, color }: { label: string; value: number; maxValue?: number; color: string }) => {
+    const getBarColor = (textColor: string) => {
+      const colorMap: { [key: string]: string } = {
+        'text-red-400': 'bg-red-500',
+        'text-orange-400': 'bg-orange-500',
+        'text-blue-400': 'bg-blue-500',
+        'text-purple-400': 'bg-purple-500',
+        'text-green-400': 'bg-green-500',
+        'text-yellow-400': 'bg-yellow-500'
+      }
+      return colorMap[textColor] || 'bg-gray-500'
+    }
+    
+    return (
+      <div className="flex items-center gap-2 mb-0.5">
+        <div className={`text-xs font-bold ${color} min-w-[35px] text-right`}>{label}</div>
+        <div className="flex-1 bg-gray-700 rounded-full h-1.5">
+          <div 
+            className={`h-1.5 rounded-full transition-all duration-300 ${getBarColor(color)}`}
+            style={{ width: `${Math.min((value / maxValue) * 100, 100)}%` }}
+          />
+        </div>
+        <div className="text-xs text-white font-bold min-w-[25px] text-left">{value}</div>
       </div>
-      <div className="text-xs text-white font-bold min-w-[25px] text-left">{value}</div>
-    </div>
-  )
+    )
+  }
 
   return (
     <div className="flex flex-col h-full">
