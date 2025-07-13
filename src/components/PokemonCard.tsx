@@ -11,50 +11,80 @@ interface PokemonCardProps {
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon, slotIndex }) => {
   const getDisplayTypes = (types: string[]) => convertTypesToChinese(types)
-  return (
-    <div className="relative w-full h-[370px] flex flex-row items-center justify-center">
-      {/* 左欄：圖片、名稱、屬性 */}
-      <div className="flex flex-col items-center justify-center flex-1 min-w-0">
-        {typeof slotIndex === 'number' && (
-          <div className="text-lg font-bold text-yellow-400 mb-1">位置 {slotIndex + 1}</div>
-        )}
-        <div className="flex flex-col items-center mb-2">
-          <img
-            src={pokemon.image || "/placeholder.svg"}
-            alt={pokemon.name}
-            className="w-40 h-40 mx-auto mb-2 object-contain drop-shadow-xl"
-            style={{ maxWidth: '100%', maxHeight: '180px' }}
-          />
-        </div>
-        <div className="mb-1 w-full text-center">
-          <div className="text-2xl font-extrabold text-white leading-tight truncate">{pokemon.chineseName}</div>
-          <div className="text-xl text-white/80 font-bold truncate">{pokemon.name}</div>
-          <div className="text-lg text-white/60 font-semibold truncate">{pokemon.japaneseName}</div>
-        </div>
-        <div className="flex justify-center gap-2 mb-1 flex-wrap">
-          {getDisplayTypes(pokemon.types).map((type: string) => (
-            <Badge key={type} className={`${typeColors[type]} text-white text-xl px-4 py-1`}>{type}</Badge>
-          ))}
-        </div>
+  
+  const StatBar = ({ label, value, maxValue = 255, color }: { label: string; value: number; maxValue?: number; color: string }) => (
+    <div className="flex items-center gap-2 mb-0.5">
+      <div className={`text-xs font-bold ${color} min-w-[35px] text-right`}>{label}</div>
+      <div className="flex-1 bg-gray-700 rounded-full h-1.5">
+        <div 
+          className={`h-1.5 rounded-full transition-all duration-300 ${color.replace('text-', 'bg-')}`}
+          style={{ width: `${Math.min((value / maxValue) * 100, 100)}%` }}
+        />
       </div>
-      {/* 右欄：弱點與抗性 */}
-      <div className="flex flex-col items-start justify-center flex-1 min-w-0 pl-4">
-        {/* 弱點區塊 */}
-        <div className="mb-6 w-full">
-          <div className="text-xl text-red-400 font-extrabold mb-2">弱點</div>
-          <div className="flex flex-wrap gap-2">
-            {getDisplayTypes(pokemon.weaknesses).map((type: string) => (
-              <Badge key={type} className={`${typeColors[type] || 'bg-red-500'} text-white text-xl px-3 py-1`}>{type}</Badge>
+      <div className="text-xs text-white font-bold min-w-[25px] text-left">{value}</div>
+    </div>
+  )
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* 上半部：原有的水平佈局 - 固定高度確保一致性 */}
+      <div className="flex flex-row items-start justify-center h-[320px]">
+        {/* 左欄：圖片、名稱、屬性 */}
+        <div className="flex flex-col items-center justify-start flex-1 min-w-0 pt-4">
+          <div className="flex flex-col items-center mb-3">
+            <img
+              src={pokemon.image || "/placeholder.svg"}
+              alt={pokemon.name}
+              className="w-32 h-32 mx-auto mb-3 object-contain drop-shadow-xl"
+            />
+          </div>
+          <div className="mb-3 w-full text-center">
+            <div className="text-xl font-extrabold text-white leading-tight truncate h-6">{pokemon.chineseName}</div>
+            <div className="text-lg text-white/80 font-bold truncate h-6">{pokemon.name}</div>
+            <div className="text-sm text-white/60 font-semibold truncate h-5">{pokemon.japaneseName}</div>
+          </div>
+          <div className="flex justify-center gap-2 mb-3 flex-wrap min-h-[2.5rem]">
+            {getDisplayTypes(pokemon.types).map((type: string) => (
+              <Badge key={type} className={`${typeColors[type]} text-white text-lg px-3 py-1 h-8 min-w-[3rem] flex items-center justify-center`}>{type}</Badge>
             ))}
           </div>
         </div>
-        {/* 抗性區塊 */}
-        <div className="w-full">
-          <div className="text-xl text-blue-400 font-extrabold mb-2">抗性</div>
-          <div className="flex flex-wrap gap-2">
-            {getDisplayTypes(pokemon.resistances).map((type: string) => (
-              <Badge key={type} className={`${typeColors[type] || 'bg-blue-500'} text-white text-xl px-3 py-1`}>{type}</Badge>
-            ))}
+        {/* 右欄：弱點與抗性 */}
+        <div className="flex flex-col items-start justify-start flex-1 min-w-0 pl-4 pt-4">
+          {/* 弱點區塊 - 固定高度 */}
+          <div className="mb-4 w-full h-[120px]">
+            <div className="text-lg text-red-400 font-extrabold mb-2">弱點</div>
+            <div className="flex flex-wrap gap-2 h-[90px] overflow-hidden">
+              {getDisplayTypes(pokemon.weaknesses).map((type: string) => (
+                <Badge key={type} className={`${typeColors[type] || 'bg-red-500'} text-white text-lg px-3 py-1 h-8 min-w-[3rem] flex items-center justify-center`}>{type}</Badge>
+              ))}
+            </div>
+          </div>
+          {/* 抗性區塊 - 固定高度 */}
+          <div className="w-full h-[120px]">
+            <div className="text-lg text-blue-400 font-extrabold mb-2">抗性</div>
+            <div className="flex flex-wrap gap-2 h-[90px] overflow-hidden">
+              {getDisplayTypes(pokemon.resistances).map((type: string) => (
+                <Badge key={type} className={`${typeColors[type] || 'bg-blue-500'} text-white text-lg px-3 py-1 h-8 min-w-[3rem] flex items-center justify-center`}>{type}</Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* 下半部：數值統計區域 - 固定位置和高度 */}
+      <div className="bg-black/30 rounded-lg p-2 mt-2 flex-shrink-0 h-[100px]">
+        <div className="text-center text-yellow-400 font-bold text-sm mb-1">基礎數值</div>
+        <div className="grid grid-cols-2 gap-x-3">
+          <div>
+            <StatBar label="HP" value={pokemon.stats.hp} color="text-red-400" />
+            <StatBar label="攻擊" value={pokemon.stats.attack} color="text-orange-400" />
+            <StatBar label="防禦" value={pokemon.stats.defense} color="text-blue-400" />
+          </div>
+          <div>
+            <StatBar label="特攻" value={pokemon.stats.specialAttack || 0} color="text-purple-400" />
+            <StatBar label="特防" value={pokemon.stats.specialDefense || 0} color="text-green-400" />
+            <StatBar label="速度" value={pokemon.stats.speed} color="text-yellow-400" />
           </div>
         </div>
       </div>

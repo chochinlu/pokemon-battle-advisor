@@ -78,7 +78,7 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
   }
 
   return (
-    <Card className="bg-black/40 border-2 border-yellow-400/50 backdrop-blur-sm h-[480px] flex flex-col justify-between relative">
+    <Card className="bg-black/40 border-2 border-yellow-400/50 backdrop-blur-sm h-[520px] flex flex-col justify-between relative">
       {/* 卡片右上角 X 按鈕 */}
       {selectedPokemon && (
         <button
