@@ -11,15 +11,30 @@ import { useState, useEffect } from "react"
 
 interface ThreatPokemon {
   chineseName: string
+  image: string
   stats: {
     attack: number
     defense: number
     specialDefense: number
   }
+  threatReason?: string
+  advantageAgainst?: string[]
+  keyAdvantages?: string[]
+}
+
+interface DangerousMove {
+  name: string
+  power: number
+  description: string
 }
 
 interface AnalysisResult {
-  teamWeaknesses: { type: string; count: number }[]
+  teamWeaknesses: { 
+    type: string; 
+    count: number; 
+    affectedPokemon: string[];
+    dangerousMoves: DangerousMove[];
+  }[]
   majorThreats: ThreatPokemon[]
   replacementSuggestions: ThreatPokemon[]
   battleOrder: {
@@ -110,27 +125,67 @@ export function BattleAnalysis({ team, onBackToTeam }: BattleAnalysisProps) {
                     <AlertTriangle className="w-6 h-6 mr-2" />
                     隊伍弱點分析
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-6">
+                    {/* 隊伍弱點區域 */}
                     <div>
-                      <h4 className="text-lg font-semibold text-white mb-3">主要弱點屬性:</h4>
-                      <div className="space-y-2">
-                        {analysis.teamWeaknesses.slice(0, 3).map((weakness, index) => (
-                          <div key={index} className="flex items-center justify-between bg-black/30 p-3 rounded">
-                            <Badge className={`${typeColors[weakness.type] || 'bg-red-500'} text-white`}>
-                              {weakness.type}
-                            </Badge>
-                            <span className="text-white">影響 {weakness.count} 隻寶可夢</span>
+                      <h4 className="text-lg font-semibold text-white mb-3">隊伍弱點屬性:</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {analysis.teamWeaknesses.map((weakness, index) => (
+                          <div key={index} className="bg-black/30 p-3 rounded">
+                            <div className="flex items-center justify-between mb-2">
+                              <Badge className={`${typeColors[weakness.type] || 'bg-red-500'} text-white`}>
+                                {weakness.type}
+                              </Badge>
+                              <span className="text-white text-sm">影響 {weakness.count} 隻</span>
+                            </div>
+                            <div className="text-xs text-white/70 mb-2">
+                              受影響: {weakness.affectedPokemon.join('、')}
+                            </div>
+                            {weakness.dangerousMoves.length > 0 && (
+                              <div className="mt-2 pt-2 border-t border-white/20">
+                                <div className="text-xs text-yellow-300 font-semibold mb-1">⚠️ 小心招式:</div>
+                                <div className="space-y-1">
+                                  {weakness.dangerousMoves.slice(0, 2).map((move, moveIndex) => (
+                                    <div key={moveIndex} className="text-xs">
+                                      <span className="text-red-300 font-medium">{move.name}</span>
+                                      {move.power > 0 && (
+                                        <span className="text-white/60"> (威力{move.power})</span>
+                                      )}
+                                      <div className="text-white/50 text-[10px] mt-0.5">
+                                        {move.description}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>
                     </div>
+
+                    {/* 主要威脅區域 */}
                     <div>
-                      <h4 className="text-lg font-semibold text-white mb-3">主要威脅:</h4>
-                      <div className="space-y-2">
-                        {analysis.majorThreats.slice(0, 3).map((threat, index) => (
-                          <div key={index} className="bg-black/30 p-3 rounded text-left">
-                            <div className="text-white font-bold">{threat.chineseName}</div>
-                            <div className="text-sm text-white/70">攻擊力: {threat.stats.attack}</div>
+                      <h4 className="text-lg font-semibold text-white mb-3">主要威脅寶可夢:</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {analysis.majorThreats.slice(0, 6).map((threat, index) => (
+                          <div key={index} className="bg-black/30 p-3 rounded flex items-start space-x-3">
+                            <img
+                              src={threat.image || "/placeholder.svg"}
+                              alt={threat.chineseName}
+                              className="w-16 h-16 object-contain flex-shrink-0"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <div className="text-white font-bold text-sm mb-1 truncate">{threat.chineseName}</div>
+                              {threat.threatReason && (
+                                <div className="text-xs text-red-300 mb-1 line-clamp-2">{threat.threatReason}</div>
+                              )}
+                              {threat.keyAdvantages && threat.keyAdvantages.length > 0 && (
+                                <div className="text-xs text-white/70 truncate">
+                                  {threat.keyAdvantages.slice(0, 2).join('、')}
+                                </div>
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>
