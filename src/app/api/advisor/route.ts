@@ -12,26 +12,26 @@ const typeTranslation: { [key: string]: string } = {
 
 // 屬性相剋表 (簡化版，只包含雙倍傷害)
 // key: 攻擊方屬性 (英文)
-// value: 被攻擊方屬性 (英文) - 受到雙倍傷害
-const typeWeaknesses: { [key: string]: string[] } = {
-    "normal": ["fighting"],
-    "fire": ["water", "ground", "rock"],
-    "water": ["electric", "grass"],
-    "electric": ["ground"],
-    "grass": ["fire", "ice", "poison", "flying", "bug"],
-    "ice": ["fire", "fighting", "rock", "steel"],
-    "fighting": ["flying", "psychic", "fairy"],
-    "poison": ["ground", "psych"],
-    "ground": ["water", "grass", "ice"],
-    "flying": ["electric", "ice", "rock"],
-    "psychic": ["bug", "ghost", "dark"],
-    "bug": ["fire", "flying", "rock"],
-    "rock": ["fighting", "steel", "ground", "water", "grass"],
-    "ghost": ["ghost", "dark"],
-    "dragon": ["ice", "dragon", "fairy"],
-    "dark": ["fighting", "bug", "fairy"],
-    "steel": ["fire", "fighting", "ground"],
-    "fairy": ["poison", "steel"],
+// value: 被攻擊方屬性 (英文) - 造成雙倍傷害
+const typeAdvantages: { [key: string]: string[] } = {
+    "normal": [],
+    "fire": ["grass", "ice", "bug", "steel"],
+    "water": ["fire", "ground", "rock"],
+    "electric": ["water", "flying"],
+    "grass": ["water", "ground", "rock"],
+    "ice": ["grass", "ground", "flying", "dragon"],
+    "fighting": ["normal", "ice", "rock", "dark", "steel"],
+    "poison": ["grass", "fairy"],
+    "ground": ["fire", "electric", "poison", "rock", "steel"],
+    "flying": ["grass", "fighting", "bug"],
+    "psychic": ["fighting", "poison"],
+    "bug": ["grass", "psychic", "dark"],
+    "rock": ["fire", "ice", "flying", "bug"],
+    "ghost": ["psychic", "ghost"],
+    "dragon": ["dragon"],
+    "dark": ["psychic", "ghost"],
+    "steel": ["ice", "rock", "fairy"],
+    "fairy": ["fighting", "dragon", "dark"],
 };
 
 // 各屬性的代表性強力招式
@@ -210,24 +210,89 @@ function analyzeCounterStrategies(team: PokemonData[], teamWeaknesses: { type: s
 
         // 找出能克制此屬性的隊伍成員
         const counterTeamMembers = team.filter(pokemon => {
-            return pokemon.types.some(pt => typeWeaknesses[englishType]?.includes(pt.toLowerCase()));
+            return pokemon.types.some(pt => typeAdvantages[pt.toLowerCase()]?.includes(englishType.toLowerCase()));
         });
 
         let strategy = `面對${weakness.type}屬性威脅時：\n`;
         
+        // 1. 優先推薦有抗性的隊員
         if (resistantTeamMembers.length > 0) {
-            strategy += `• 派出 ${resistantTeamMembers[0].chineseName} 承受傷害（具有抗性）\n`;
+            const resistant = resistantTeamMembers[0];
+            strategy += `• 首選：派出 ${resistant.chineseName}（具有抗性，傷害減半）\n`;
+            
+            // 分析該寶可夢的戰術建議
+            if (resistant.stats.attack > resistant.stats.specialAttack) {
+                strategy += `  - 以物理攻擊為主，尋找機會近身作戰\n`;
+            } else {
+                strategy += `  - 以特殊攻擊為主，保持距離輸出\n`;
+            }
         }
         
+        // 2. 推薦能反擊的隊員
         if (counterTeamMembers.length > 0) {
-            strategy += `• 使用 ${counterTeamMembers[0].chineseName} 進行反擊（屬性相剋）\n`;
-        } else {
-            strategy += `• 建議使用小招磨耗或切換寶可夢避戰\n`;
+            const counter = counterTeamMembers[0];
+            strategy += `• 反擊手：使用 ${counter.chineseName}（屬性相剋，造成雙倍傷害）\n`;
+            strategy += `  - 優先使用${counter.types.join('/')}屬性招式\n`;
+            
+            if (counter.stats.speed > 90) {
+                strategy += `  - 速度優勢：可搶先攻擊\n`;
+            } else {
+                strategy += `  - 需注意先手問題，可考慮先使用其他隊員消耗\n`;
+            }
         }
         
-        // 如果既沒有抗性也沒有相剋優勢
+        // 3. 如果沒有直接克制，提供實戰策略
         if (resistantTeamMembers.length === 0 && counterTeamMembers.length === 0) {
-            strategy += `• 這是隊伍的重大弱點，建議優先切換或使用狀態技能拖延\n`;
+            strategy += `• 劣勢應對策略：\n`;
+            
+            // 找出不會被剋制且最耐打的隊員作為肉盾
+            const nonWeakMembers = team.filter(p => 
+                !p.weaknesses.some(w => w.toLowerCase() === englishType.toLowerCase())
+            );
+            
+            if (nonWeakMembers.length > 0) {
+                const tankiest = nonWeakMembers.reduce((prev, current) => 
+                    (prev.stats.hp + prev.stats.defense + prev.stats.specialDefense) > 
+                    (current.stats.hp + current.stats.defense + current.stats.specialDefense) ? prev : current
+                );
+                strategy += `  - 肉盾戰術：派出 ${tankiest.chineseName}（不會被剋制，相對安全）\n`;
+            } else {
+                // 如果所有隊員都有弱點，選擇傷害最小的
+                const leastWeak = team.reduce((prev, current) => {
+                    const prevDefense = prev.stats.hp + prev.stats.defense + prev.stats.specialDefense;
+                    const currentDefense = current.stats.hp + current.stats.defense + current.stats.specialDefense;
+                    return prevDefense > currentDefense ? prev : current;
+                });
+                strategy += `  - 無奈之選：派出 ${leastWeak.chineseName}（最耐打，但仍有弱點）\n`;
+                strategy += `  - ⚠️ 注意：所有隊員都會被剋制，務必快速切換\n`;
+            }
+            
+            strategy += `  - 狀態戰術：使用睡眠粉、麻痺粉、毒粉等削弱對手\n`;
+            strategy += `  - 消耗戰術：小招磨血，避免硬碰硬對決\n`;
+            
+            // 找出速度最快且不會被剋制的隊員
+            const fastNonWeak = nonWeakMembers.length > 0 ? 
+                nonWeakMembers.reduce((prev, current) => 
+                    prev.stats.speed > current.stats.speed ? prev : current
+                ) : null;
+            
+            if (fastNonWeak && fastNonWeak.stats.speed > 80) {
+                strategy += `  - 速攻戰術：用 ${fastNonWeak.chineseName} 搶先手，打了就跑\n`;
+            } else {
+                const fastest = team.reduce((prev, current) => 
+                    prev.stats.speed > current.stats.speed ? prev : current
+                );
+                strategy += `  - 孤注一擲：用 ${fastest.chineseName} 搶先手，但要承擔風險\n`;
+            }
+        }
+        
+        // 4. 通用戰術提醒
+        const affectedMembers = team.filter(p => 
+            p.weaknesses.some(w => w.toLowerCase() === englishType.toLowerCase())
+        );
+        
+        if (affectedMembers.length > 0) {
+            strategy += `• 切換時機：當${affectedMembers.map(p => p.chineseName).join('、')}面臨危險時立即切換\n`;
         }
 
         strategies.push({
