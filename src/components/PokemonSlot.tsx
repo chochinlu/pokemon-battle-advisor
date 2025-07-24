@@ -142,7 +142,7 @@ export function PokemonSlot({ slotIndex, selectedPokemon, onSelect, onClear }: P
             </div>
           </div>
         ) : (
-          <PokemonCard pokemon={selectedPokemon} slotIndex={slotIndex} showClose={true} onClear={handleClear} />
+          <PokemonCard pokemon={selectedPokemon} slotIndex={slotIndex} />
         )}
       </CardContent>
     </Card>
