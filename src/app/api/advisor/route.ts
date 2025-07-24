@@ -171,18 +171,23 @@ function analyzeBattleOrder(team: PokemonData[]) {
         };
     });
 
-    // 建議出場順序
-    const pioneer = pokemonWithScores.reduce((best, current) => 
-        current.pioneerScore > best.pioneerScore ? current : best
-    );
+    // 建議出場順序 - 確保不重複
+    const sortedByPioneer = [...pokemonWithScores].sort((a, b) => b.pioneerScore - a.pioneerScore);
+    const sortedByAnchor = [...pokemonWithScores].sort((a, b) => b.anchorScore - a.anchorScore);
+    const sortedByCore = [...pokemonWithScores].sort((a, b) => b.coreScore - a.coreScore);
     
-    const anchor = pokemonWithScores.reduce((best, current) => 
-        current.anchorScore > best.anchorScore ? current : best
-    );
+    const usedIndices = new Set<number>();
     
-    const core = pokemonWithScores.find(p => 
-        p.index !== pioneer.index && p.index !== anchor.index
-    ) || pokemonWithScores[0];
+    // 先選先鋒
+    const pioneer = sortedByPioneer[0];
+    usedIndices.add(pioneer.index);
+    
+    // 選後衛（排除已選的先鋒）
+    const anchor = sortedByAnchor.find(p => !usedIndices.has(p.index)) || sortedByAnchor[0];
+    usedIndices.add(anchor.index);
+    
+    // 選中堅（排除已選的先鋒和後衛）
+    const core = sortedByCore.find(p => !usedIndices.has(p.index)) || pokemonWithScores.find(p => !usedIndices.has(p.index)) || pokemonWithScores[0];
 
     return {
         order: [pioneer, core, anchor],
