@@ -62,6 +62,7 @@ export function validateImageUrl(url: string): string {
 }
 
 // 將原始 pokemon_data.json 轉換為清理格式
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function convertPokemonData(rawData: any[]): any[] {
   return rawData.map(pokemon => {
     // 處理屬性字串，轉換為英文陣列

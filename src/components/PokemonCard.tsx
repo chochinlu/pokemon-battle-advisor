@@ -9,7 +9,7 @@ interface PokemonCardProps {
   slotIndex?: number
 }
 
-export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon, slotIndex }) => {
+export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
   const getDisplayTypes = (types: string[]) => convertTypesToChinese(types)
   
   const StatBar = ({ label, value, maxValue = 150, color }: { label: string; value: number; maxValue?: number; color: string }) => {
