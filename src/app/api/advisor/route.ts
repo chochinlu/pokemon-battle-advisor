@@ -306,6 +306,71 @@ function analyzeCounterStrategies(team: PokemonData[], teamWeaknesses: { type: s
     return strategies;
 }
 
+// 分析替換後隊伍的組合優勢
+function analyzeTeamComboAdvantage(newTeam: PokemonData[]): string {
+    // 分析新隊伍的弱點分布
+    const newWeaknesses: { [key: string]: number } = {};
+    newTeam.forEach(p => {
+        p.weaknesses.forEach(w => {
+            const weaknessLower = w.toLowerCase();
+            newWeaknesses[weaknessLower] = (newWeaknesses[weaknessLower] || 0) + 1;
+        });
+    });
+
+    // 分析抗性分布
+    const newResistances: { [key: string]: number } = {};
+    newTeam.forEach(p => {
+        p.resistances.forEach(r => {
+            const resistanceLower = r.toLowerCase();
+            newResistances[resistanceLower] = (newResistances[resistanceLower] || 0) + 1;
+        });
+    });
+
+    // 分析攻擊覆蓋面
+    const attackCoverage = new Set<string>();
+    newTeam.forEach(p => {
+        p.types.forEach(type => {
+            const advantages = typeAdvantages[type.toLowerCase()] || [];
+            advantages.forEach(target => attackCoverage.add(target));
+        });
+    });
+
+    let comboAnalysis = "組合優勢: ";
+    
+    // 分析主要弱點（影響2隻以上的屬性）
+    const majorWeaknesses = Object.entries(newWeaknesses)
+        .filter(([, count]) => count >= 2)
+        .map(([type]) => typeTranslation[type] || type);
+
+    if (majorWeaknesses.length === 0) {
+        comboAnalysis += "無重大共同弱點";
+    } else if (majorWeaknesses.length === 1) {
+        comboAnalysis += `僅怕${majorWeaknesses[0]}屬性`;
+    } else {
+        comboAnalysis += `主要弱點: ${majorWeaknesses.slice(0, 2).join('、')}`;
+    }
+
+    // 分析強勢抗性
+    const strongResistances = Object.entries(newResistances)
+        .filter(([, count]) => count >= 2)
+        .map(([type]) => typeTranslation[type] || type);
+
+    if (strongResistances.length > 0) {
+        comboAnalysis += `，強抗${strongResistances.slice(0, 2).join('、')}`;
+    }
+
+    // 分析攻擊覆蓋面
+    if (attackCoverage.size >= 12) {
+        comboAnalysis += "，攻擊面極廣";
+    } else if (attackCoverage.size >= 8) {
+        comboAnalysis += "，攻擊面很廣";
+    } else if (attackCoverage.size >= 6) {
+        comboAnalysis += "，攻擊面較廣";
+    }
+
+    return comboAnalysis;
+}
+
 export async function POST(request: Request) {
     const { pokemonNames } = await request.json();
 
@@ -428,20 +493,102 @@ export async function POST(request: Request) {
 
     const topThreats = majorThreats.slice(0, 8); // 增加到8個威脅
 
-    // 提供替換建議 (簡化版：找出能抵抗隊伍主要弱點的寶可夢)
-    const replacementSuggestions: PokemonData[] = [];
-    if (sortedWeaknesses.length > 0) {
-        const topWeakness = sortedWeaknesses[0];
-        const englishTopWeakness = Object.keys(typeTranslation).find(key => typeTranslation[key] === topWeakness.type);
-        if (englishTopWeakness) {
-            // 找出能抵抗此弱點的寶可夢 (即該寶可夢的屬性是隊伍主要弱點的抗性)
-            const resistantPokemon = allPokemon.filter(p => {
-                return p.resistances.map(r => r.toLowerCase()).includes(englishTopWeakness.toLowerCase());
+    // 提供替換建議
+    const replacementSuggestions: (PokemonData & {
+        replaceTarget: string;
+        replaceReason: string;
+        advantages: string[];
+        keyStats: string;
+        teamComboAdvantage: string;
+    })[] = [];
+
+    // 針對每個主要弱點提供替換建議
+    sortedWeaknesses.slice(0, 2).forEach(weakness => {
+        const englishWeakness = Object.keys(typeTranslation).find(key => typeTranslation[key] === weakness.type);
+        if (!englishWeakness) return;
+
+        // 找出隊伍中受此弱點影響的寶可夢
+        const vulnerableMembers = selectedPokemon.filter(p => 
+            p.weaknesses.some(w => w.toLowerCase() === englishWeakness.toLowerCase())
+        );
+
+        if (vulnerableMembers.length === 0) return;
+
+        // 找出能抵抗此弱點的寶可夢
+        const resistantPokemon = allPokemon.filter(p => {
+            // 不在當前隊伍中，且能抵抗此屬性
+            const notInTeam = !selectedPokemon.some(teamMember => teamMember.id === p.id);
+            const hasResistance = p.resistances.map(r => r.toLowerCase()).includes(englishWeakness.toLowerCase());
+            return notInTeam && hasResistance;
+        });
+
+        // 找出能克制此屬性的寶可夢
+        const counterPokemon = allPokemon.filter(p => {
+            const notInTeam = !selectedPokemon.some(teamMember => teamMember.id === p.id);
+            const canCounter = p.types.some(pt => typeAdvantages[pt.toLowerCase()]?.includes(englishWeakness.toLowerCase()));
+            return notInTeam && canCounter;
+        });
+
+        // 合併並分析建議
+        const candidates = [...resistantPokemon, ...counterPokemon];
+        const uniqueCandidates = candidates.filter((pokemon, index, self) => 
+            index === self.findIndex(p => p.id === pokemon.id)
+        );
+
+        // 為每個候選寶可夢分析優勢
+        uniqueCandidates.forEach(candidate => {
+            const advantages = [];
+            const hasResistance = candidate.resistances.map(r => r.toLowerCase()).includes(englishWeakness.toLowerCase());
+            const canCounter = candidate.types.some(pt => typeAdvantages[pt.toLowerCase()]?.includes(englishWeakness.toLowerCase()));
+
+            if (hasResistance) {
+                advantages.push(`抗${weakness.type}屬性（傷害減半）`);
+            }
+            if (canCounter) {
+                advantages.push(`${candidate.types.join('/')}屬性克制${weakness.type}`);
+            }
+
+            // 分析數值優勢
+            if (candidate.stats.attack > 110) {
+                advantages.push(`高攻擊力(${candidate.stats.attack})`);
+            }
+            if (candidate.stats.specialAttack > 110) {
+                advantages.push(`高特攻(${candidate.stats.specialAttack})`);
+            }
+            if (candidate.stats.speed > 100) {
+                advantages.push(`高速度(${candidate.stats.speed})`);
+            }
+            if ((candidate.stats.defense + candidate.stats.specialDefense) > 160) {
+                advantages.push(`高防禦力(${candidate.stats.defense + candidate.stats.specialDefense})`);
+            }
+
+            const replaceTarget = vulnerableMembers[0].chineseName; // 建議替換最脆弱的
+            const replaceReason = `${replaceTarget}容易被${weakness.type}屬性剋制，${candidate.chineseName}能有效應對此威脅`;
+            const keyStats = `攻${candidate.stats.attack}/防${candidate.stats.defense}/速${candidate.stats.speed}`;
+
+            // 分析替換後的隊伍組合優勢
+            const newTeam = selectedPokemon.filter(p => p.chineseName !== replaceTarget).concat(candidate);
+            const teamComboAdvantage = analyzeTeamComboAdvantage(newTeam);
+
+            replacementSuggestions.push({
+                ...candidate,
+                replaceTarget,
+                replaceReason,
+                advantages,
+                keyStats,
+                teamComboAdvantage
             });
-            resistantPokemon.sort((a, b) => (b.stats.defense + b.stats.specialDefense) - (a.stats.defense + a.stats.specialDefense)); // 根據防禦力排序
-            replacementSuggestions.push(...resistantPokemon.slice(0, 3)); // 取前3名
-        }
-    }
+        });
+    });
+
+    // 排序並取前5名
+    replacementSuggestions.sort((a, b) => {
+        const aScore = a.advantages.length * 10 + a.stats.attack + a.stats.specialAttack + a.stats.speed;
+        const bScore = b.advantages.length * 10 + b.stats.attack + b.stats.specialAttack + b.stats.speed;
+        return bScore - aScore;
+    });
+
+    const topReplacements = replacementSuggestions.slice(0, 5);
 
     // 分析出場順序建議
     const battleOrder = analyzeBattleOrder(selectedPokemon);
@@ -454,7 +601,7 @@ export async function POST(request: Request) {
         missingPokemon,
         teamWeaknesses: sortedWeaknesses,
         majorThreats: topThreats,
-        replacementSuggestions,
+        replacementSuggestions: topReplacements,
         battleOrder,
         counterStrategies,
     });

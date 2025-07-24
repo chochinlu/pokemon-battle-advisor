@@ -22,6 +22,21 @@ interface ThreatPokemon {
   keyAdvantages?: string[]
 }
 
+interface ReplacementPokemon {
+  chineseName: string
+  image: string
+  stats: {
+    attack: number
+    defense: number
+    specialDefense: number
+  }
+  replaceTarget: string
+  replaceReason: string
+  advantages: string[]
+  keyStats: string
+  teamComboAdvantage: string
+}
+
 interface DangerousMove {
   name: string
   power: number
@@ -36,7 +51,7 @@ interface AnalysisResult {
     dangerousMoves: DangerousMove[];
   }[]
   majorThreats: ThreatPokemon[]
-  replacementSuggestions: ThreatPokemon[]
+  replacementSuggestions: ReplacementPokemon[]
   battleOrder: {
     order: { pokemon: ThreatPokemon; index: number }[]
     explanation: {
@@ -249,13 +264,49 @@ export function BattleAnalysis({ team, onBackToTeam }: BattleAnalysisProps) {
               {analysis.replacementSuggestions.length > 0 && (
                 <Card className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 mb-6">
                   <CardContent className="p-6">
-                    <h3 className="text-2xl font-bold text-purple-400 mb-4">🔄 替換建議</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <h3 className="text-2xl font-bold text-purple-400 mb-4">🔄 隊伍替換建議</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {analysis.replacementSuggestions.map((suggestion, index) => (
-                        <div key={index} className="bg-black/30 p-4 rounded text-center">
-                          <div className="text-white font-bold">{suggestion.chineseName}</div>
-                          <div className="text-sm text-white/70">
-                            防禦: {suggestion.stats.defense + suggestion.stats.specialDefense}
+                        <div key={index} className="bg-black/30 p-4 rounded flex items-start space-x-3">
+                          <img
+                            src={suggestion.image || "/placeholder.svg"}
+                            alt={suggestion.chineseName}
+                            className="w-16 h-16 object-contain flex-shrink-0"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="text-white font-bold text-sm">{suggestion.chineseName}</div>
+                              <div className="text-xs text-white/60">{suggestion.keyStats}</div>
+                            </div>
+                            
+                            <div className="mb-2">
+                              <div className="text-xs text-orange-300 font-medium">
+                                替換目標: {suggestion.replaceTarget}
+                              </div>
+                              <div className="text-xs text-white/70 mt-1">
+                                {suggestion.replaceReason}
+                              </div>
+                            </div>
+
+                            {/* 組合優勢分析 */}
+                            <div className="mb-2 p-2 bg-blue-500/20 rounded">
+                              <div className="text-xs text-blue-300 font-medium">
+                                {suggestion.teamComboAdvantage}
+                              </div>
+                            </div>
+                            
+                            {suggestion.advantages.length > 0 && (
+                              <div className="space-y-1">
+                                <div className="text-xs text-green-300 font-medium">個體優勢:</div>
+                                <div className="flex flex-wrap gap-1">
+                                  {suggestion.advantages.slice(0, 3).map((advantage, advIndex) => (
+                                    <Badge key={advIndex} className="bg-green-600/30 text-green-200 text-[10px] px-1 py-0 border-green-500/50">
+                                      {advantage}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
