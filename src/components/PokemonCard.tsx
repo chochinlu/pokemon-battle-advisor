@@ -59,7 +59,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon, slotIndex }) 
           </div>
           <div className="flex justify-center gap-2 mb-3 flex-wrap min-h-[2.5rem]">
             {getDisplayTypes(pokemon.types).map((type: string) => (
-              <Badge key={type} className={`${typeColors[type]} text-white text-lg px-3 py-1 h-8 min-w-[3rem] flex items-center justify-center`}>{type}</Badge>
+              <Badge key={type} className={`${typeColors[type]} text-white text-sm px-2 py-0.5 h-6 min-w-[2.5rem] flex items-center justify-center`}>{type}</Badge>
             ))}
           </div>
         </div>
@@ -70,7 +70,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon, slotIndex }) 
             <div className="text-lg text-red-400 font-extrabold mb-2">弱點</div>
             <div className="flex flex-wrap gap-2 h-[90px] overflow-hidden">
               {getDisplayTypes(pokemon.weaknesses).map((type: string) => (
-                <Badge key={type} className={`${typeColors[type] || 'bg-red-500'} text-white text-lg px-3 py-1 h-8 min-w-[3rem] flex items-center justify-center`}>{type}</Badge>
+                <Badge key={type} className={`${typeColors[type] || 'bg-red-500'} text-white text-sm px-2 py-0.5 h-6 min-w-[2.5rem] flex items-center justify-center`}>{type}</Badge>
               ))}
             </div>
           </div>
@@ -79,7 +79,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon, slotIndex }) 
             <div className="text-lg text-blue-400 font-extrabold mb-2">抗性</div>
             <div className="flex flex-wrap gap-2 h-[90px] overflow-hidden">
               {getDisplayTypes(pokemon.resistances).map((type: string) => (
-                <Badge key={type} className={`${typeColors[type] || 'bg-blue-500'} text-white text-lg px-3 py-1 h-8 min-w-[3rem] flex items-center justify-center`}>{type}</Badge>
+                <Badge key={type} className={`${typeColors[type] || 'bg-blue-500'} text-white text-sm px-2 py-0.5 h-6 min-w-[2.5rem] flex items-center justify-center`}>{type}</Badge>
               ))}
             </div>
           </div>
